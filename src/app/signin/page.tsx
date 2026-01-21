@@ -7,19 +7,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
+import { signinSchema } from "@/src/lib/schema";
+
 import EyeOpenIcon from "@/src/assets/icons/eye-open.svg";
 import EyeClosedIcon from "@/src/assets/icons/eye-closed.svg";
-
-const signinSchema = z.object({
-  email: z.email("올바른 이메일 형식이 아닙니다."),
-  password: z
-    .string()
-    .min(8, "비밀번호는 8자 이상이어야 합니다.")
-    .regex(
-      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])/,
-      "영문, 숫자, 특수문자를 모두 포함해야 합니다.",
-    ),
-});
 
 type SigninInput = z.infer<typeof signinSchema>;
 

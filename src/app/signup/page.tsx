@@ -6,27 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-const signupSchema = z
-  .object({
-    name: z
-      .string()
-      .min(2, "이름은 2자 이상이어야 합니다.")
-      .max(8, "이름은 8자 이하이어야 합니다.")
-      .refine((val) => !/\s/.test(val), "이름에 공백을 포함할 수 없습니다."),
-    email: z.email("올바른 이메일 형식을 입력해주세요."),
-    password: z
-      .string()
-      .min(8, "비밀번호는 8자 이상이어야 합니다.")
-      .regex(
-        /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])/,
-        "영문, 숫자, 특수문자를 모두 포함해야 합니다.",
-      ),
-    passwordConfirm: z.string().min(1, "비밀번호 확인을 입력해주세요."),
-  })
-  .refine((data) => data.password === data.passwordConfirm, {
-    message: "비밀번호가 일치하지 않습니다.",
-    path: ["passwordConfirm"],
-  });
+import { signupSchema } from "@/src/lib/schema";
 
 type SignupInput = z.infer<typeof signupSchema>;
 
@@ -143,7 +123,8 @@ export default function SignUpPage() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 hover:cursor-pointer transition-all shadow-lg disabled:bg-gray-30"
+            disabled={isSubmitting}
+            className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 hover:cursor-pointer transition-all shadow-lg disabled:bg-gray-300"
           >
             {isSubmitting ? "회원가입 중..." : "회원가입"}
           </button>
