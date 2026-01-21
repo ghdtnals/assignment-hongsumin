@@ -36,11 +36,7 @@ export default function MyPage() {
     register: regPw,
     handleSubmit: handlePwSubmit,
     reset: resetPw,
-    formState: {
-      errors: pwErrors,
-      isSubmitting: isPwSubmitting,
-      isValid: isPwValid,
-    },
+    formState: { errors: pwErrors, isSubmitting: isPwSubmitting },
   } = useForm<PwInput>({
     resolver: zodResolver(passwordUpdateSchema),
     mode: "onChange",
@@ -130,7 +126,7 @@ export default function MyPage() {
               label="비밀번호 업데이트"
               isSubmitting={isPwSubmitting}
               className="mt-2"
-              disabled={!isPwValid || isPwSubmitting}
+              disabled={isPwSubmitting}
             />
           </form>
         </section>
