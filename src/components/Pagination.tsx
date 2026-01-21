@@ -2,8 +2,8 @@
 
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
-import ArrowLeft from "@/src/assets/icons/icon_arrow-left.svg";
-import ArrowRight from "@/src/assets/icons/icon_arrow-right.svg";
+import ArrowLeft from "@/src/assets/icons/arrow-left.svg";
+import ArrowRight from "@/src/assets/icons/arrow-right.svg";
 
 interface PaginationProps {
   totalItems: number;
