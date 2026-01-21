@@ -1,8 +1,10 @@
 export const SORT_OPTIONS = [
   { label: "청구건수 많은순", value: "명세서청구건수-desc" },
   { label: "청구건수 적은순", value: "명세서청구건수-asc" },
-  { label: "보험자부담금 높은순", value: "보험자부담금-desc" },
-  { label: "요양급여총액 높은순", value: "요양급여비용총액-desc" },
+  { label: "보험자부담금 높은순", value: "보험자부담금(선별포함)-desc" },
+  { label: "보험자부담금 낮은순", value: "보험자부담금(선별포함)-asc" },
+  { label: "요양급여총액 높은순", value: "요양급여비용총액(선별포함)-desc" },
+  { label: "요양급여총액 낮은순", value: "요양급여비용총액(선별포함)-asc" },
   { label: "환자수 많은순", value: "환자수-desc" },
   { label: "환자수 적은순", value: "환자수-asc" },
   { label: "입내원일수 많은순", value: "입내원일수-desc" },

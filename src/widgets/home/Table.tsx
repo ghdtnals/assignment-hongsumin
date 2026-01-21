@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 import Select from "@/src/components/Select";
-import SearchInput from "@/src/components/SearchInput";
 import Pagination from "@/src/components/Pagination";
 
 import { SORT_OPTIONS, TABLE_HEADERS } from "@/src/constants/Table";
@@ -12,9 +11,17 @@ interface TableProps {
   data: any[];
   totalCount: number;
   perPage: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
 }
 
-const Table = ({ data, totalCount, perPage }: TableProps) => {
+const Table = ({
+  data,
+  totalCount,
+  perPage,
+  currentPage,
+  onPageChange,
+}: TableProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<{
     key: string;
@@ -24,9 +31,14 @@ const Table = ({ data, totalCount, perPage }: TableProps) => {
     direction: "desc",
   });
 
+  useEffect(() => {
+    if (currentPage !== 1) {
+      onPageChange(1);
+    }
+  }, [searchTerm]);
+
   const filteredAndSortedData = useMemo(() => {
     if (!data) return [];
-
     let items = [...data];
 
     if (searchTerm) {
@@ -51,6 +63,8 @@ const Table = ({ data, totalCount, perPage }: TableProps) => {
   const handleSortChange = (combinedValue: string) => {
     const [key, direction] = combinedValue.split("-");
     setSortConfig({ key, direction: direction as "asc" | "desc" });
+
+    onPageChange(1);
   };
 
   return (
@@ -65,22 +79,17 @@ const Table = ({ data, totalCount, perPage }: TableProps) => {
             onSelect={handleSortChange}
             placeholder="정렬 선택"
           />
-          <SearchInput
-            value={searchTerm}
-            onChange={setSearchTerm}
-            placeholder="검색어를 입력하세요."
-          />
         </div>
       </div>
 
-      <div className="relative mb-6 overflow-hidden rounded-xl border border-gray-200 shadow-inner">
+      <div className="relative mb-6 overflow-x-auto rounded-xl border border-gray-200 shadow-inner no-scrollbar">
         <table className="w-full border-separate border-spacing-0 text-left text-sm">
           <thead className="bg-gray-100">
             <tr>
               {TABLE_HEADERS.map((h) => (
                 <th
                   key={h.key}
-                  className="border-b border-gray-200 px-6 py-4 text-center font-bold text-gray-700"
+                  className="border-b border-gray-200 px-6 py-4 text-center font-bold text-gray-700 whitespace-nowrap"
                 >
                   {h.label}
                 </th>
@@ -90,7 +99,7 @@ const Table = ({ data, totalCount, perPage }: TableProps) => {
           <tbody className="divide-y divide-gray-100">
             {filteredAndSortedData.map((row, i) => (
               <tr key={i} className="transition-colors hover:bg-blue-50/50">
-                <td className="border-b border-gray-100 px-6 py-4 text-center text-gray-600">
+                <td className="border-b border-gray-100 px-6 py-4 text-center text-gray-600 italic">
                   {row["진료년도"]}
                 </td>
                 <td className="whitespace-nowrap border-b border-gray-100 px-6 py-4 text-center">
@@ -98,24 +107,24 @@ const Table = ({ data, totalCount, perPage }: TableProps) => {
                     {row["의료기관종별"]}
                   </span>
                 </td>
-                <td className="border-b border-gray-100 px-6 py-4 font-bold text-gray-800">
+                <td className="border-b border-gray-100 px-6 py-4 font-bold text-gray-800 break-keep">
                   {row["진료과목(표시과목)"]}
                 </td>
-                <td className="border-b border-gray-100 px-6 py-4 text-right">
+                <td className="border-b border-gray-100 px-6 py-4 text-right tabular-nums">
                   {Number(row["명세서청구건수"] || 0).toLocaleString()}
                 </td>
-                <td className="border-b border-gray-100 px-6 py-4 text-right">
+                <td className="border-b border-gray-100 px-6 py-4 text-right tabular-nums">
                   {Number(row["보험자부담금(선별포함)"] || 0).toLocaleString()}
                 </td>
-                <td className="border-b border-gray-100 px-6 py-4 text-right ">
+                <td className="border-b border-gray-100 px-6 py-4 text-right tabular-nums">
                   {Number(
                     row["요양급여비용총액(선별포함)"] || 0,
                   ).toLocaleString()}
                 </td>
-                <td className="border-b border-gray-100 px-6 py-4 text-right text-[#ef4444]">
+                <td className="border-b border-gray-100 px-6 py-4 text-right text-[#ef4444] font-semibold tabular-nums">
                   {Number(row["환자수"] || 0).toLocaleString()}
                 </td>
-                <td className="border-b border-gray-100 px-6 py-4 text-right text-[#3b82f6]">
+                <td className="border-b border-gray-100 px-6 py-4 text-right text-[#3b82f6] font-semibold tabular-nums">
                   {Number(row["입내원일수"] || 0).toLocaleString()}
                 </td>
               </tr>
@@ -129,6 +138,8 @@ const Table = ({ data, totalCount, perPage }: TableProps) => {
           totalItems={totalCount}
           itemsPerPage={perPage}
           maxPageButtons={5}
+          currentPage={currentPage}
+          onPageChange={onPageChange}
         />
       </div>
     </div>
