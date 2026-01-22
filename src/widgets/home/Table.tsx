@@ -23,27 +23,33 @@ const Table = ({
   const [sortConfig, setSortConfig] = useState<{
     key: string;
     direction: "asc" | "desc";
-  }>({
-    key: "환자수",
-    direction: "desc",
-  });
+  } | null>(null);
 
   const sortedData = useMemo(() => {
     if (!data) return [];
+
     let items = [...data];
 
-    items.sort((a, b) => {
-      const aValue = Number(a[sortConfig.key] || 0);
-      const bValue = Number(b[sortConfig.key] || 0);
-      return sortConfig.direction === "asc" ? aValue - bValue : bValue - aValue;
-    });
+    if (sortConfig) {
+      items.sort((a, b) => {
+        const aValue = Number(a[sortConfig.key] || 0);
+        const bValue = Number(b[sortConfig.key] || 0);
+        return sortConfig.direction === "asc"
+          ? aValue - bValue
+          : bValue - aValue;
+      });
+    }
 
     return items;
   }, [data, sortConfig]);
 
   const handleSortChange = (combinedValue: string) => {
-    const [key, direction] = combinedValue.split("-");
-    setSortConfig({ key, direction: direction as "asc" | "desc" });
+    if (combinedValue === "default") {
+      setSortConfig(null);
+    } else {
+      const [key, direction] = combinedValue.split("-");
+      setSortConfig({ key, direction: direction as "asc" | "desc" });
+    }
     onPageChange(1);
   };
 
@@ -53,7 +59,9 @@ const Table = ({
         <div className="w-auto">
           <Select
             options={SORT_OPTIONS}
-            selectedOption={`${sortConfig.key}-${sortConfig.direction}`}
+            selectedOption={
+              sortConfig ? `${sortConfig.key}-${sortConfig.direction}` : ""
+            }
             onSelect={handleSortChange}
             placeholder="정렬 선택"
           />
