@@ -18,7 +18,7 @@ const Button = ({
   ...props
 }: ButtonProps) => {
   const baseStyles =
-    "rounded-xl font-bold transition-all flex items-center justify-center disabled:bg-gray-300 disabled:cursor-not-allowed";
+    "rounded-xl font-bold transition-all flex items-center justify-center disabled:bg-gray-300 disabled:cursor-not-allowed hover:cursor-pointer";
 
   const variants = {
     primary: "bg-blue-600 text-white hover:bg-blue-700 shadow-lg py-4",

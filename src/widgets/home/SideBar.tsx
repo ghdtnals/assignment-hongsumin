@@ -11,7 +11,7 @@ const menuItems: MenuType[] = ["대시보드 홈", "설정", "문의"];
 
 const Sidebar = ({ currentMenu, onMenuChange }: SidebarProps) => {
   return (
-    <aside className="fixed left-0 top-16 w-64 h-[calc(100vh-64px)] bg-[#1a1a1a] border-r border-gray-800 z-40">
+    <aside className="fixed left-0 top-16 w-50 h-full bg-[#1a1a1a] border-r border-gray-800 z-40">
       <nav className="mt-8 px-4 flex flex-col gap-2">
         {menuItems.map((menuName) => (
           <button
