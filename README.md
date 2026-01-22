@@ -53,7 +53,7 @@
 > **React Hook Form**과 **Zod**를 결합하여 비제어 컴포넌트 기반 리렌더링 최적화와 선언적 유효성 검사를 구현했습니다.
 
 - **검증 로직**
-  - **Zod**의 `refine`을 활용하여 신규 비밀번호와 확인 필드 간의 일치 여부를 검증하는 등 복잡한 조건부 로직을 선언적으로 처리했습니다.
+  - **Zod**의 `refine`을 활용하여 신규 비밀번호와 확인 필드 간의 일치 여부를 검증하는 등 복잡한 조건부 로직을 선언적으로 처리
     
 <table align="center" width="100%"> <tr> <th align="center">마이페이지</th> </tr> <tr> <td align="center"> <img src="https://github.com/user-attachments/assets/6688c17f-02fe-4fce-84d7-8330ae2fddcc" width="45%" alt="마이페이지 화면" /> </td> </tr> </table>
 
