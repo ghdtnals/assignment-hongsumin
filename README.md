@@ -80,7 +80,7 @@
 
 **Vercel**을 통해 배포되었으며, 아래 링크에서 확인하실 수 있습니다.
 
-**🔗 [배포 링크 바로가기]([https://여기에_본인의_베르셀_주소_입력.vercel.app](https://assignment-hongsumin.vercel.app))**
+**🔗 [배포 링크 바로가기](https://assignment-hongsumin.vercel.app)**
 
 #### **로컬 실행 방법 (Local Run)**
 ```bash
