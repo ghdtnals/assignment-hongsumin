@@ -70,6 +70,98 @@
   - 공백 체크, 특수문자 조합, 비밀번호 일치 확인 등 복잡한 요구사항을 Zod의 `refine`과 `regex`로 선언적으로 처리
   -  검증 규칙 변경 시 스키마 파일만 수정하면 서비스 전체에 반영되도록 설계
 
+ ```
+import * as z from "zod";
+
+// 일반 회원용 이름 필드
+export const nameField = z
+  .string()
+  .min(1, "성함을 입력해주세요.")
+  .min(2, "성함은 2자 이상이어야 합니다.")
+  .max(8, "성함은 8자 이하이어야 합니다.")
+  .refine((val) => !/\s/.test(val), "성함에 공백을 포함할 수 없습니다.");
+
+// 문의하기용 이름 필드
+export const contactNameField = z
+  .string()
+  .min(1, "성함을 입력해주세요.")
+  .min(2, "성함은 2글자 이상 입력해주세요.")
+  .max(20, "성함은 20자 이내로 입력해주세요.")
+  .refine((val) => !/\s/.test(val), "이름에 공백을 포함할 수 없습니다.");
+
+// 공통 이메일 필드
+export const emailField = z
+  .string()
+  .min(1, "이메일을 입력해주세요.")
+  .email("올바른 이메일 형식을 입력해주세요.");
+
+// 공통 비밀번호 필드
+export const passwordField = z
+  .string()
+  .min(1, "비밀번호를 입력해주세요.")
+  .min(8, "비밀번호는 8자 이상이어야 합니다.")
+  .regex(
+    /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])/,
+    "영문, 숫자, 특수문자를 모두 포함해야 합니다.",
+  );
+
+// 로그인 유효성 검사 스키마
+export const signinSchema = z.object({
+  email: emailField,
+  password: z.string().min(1, "비밀번호를 입력해주세요."),
+});
+
+// 회원가입 유효성 검사 스키마
+export const signupSchema = z
+  .object({
+    name: nameField,
+    email: emailField,
+    password: passwordField,
+    passwordConfirm: z.string().min(1, "비밀번호 확인을 입력해주세요."),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: "비밀번호가 일치하지 않습니다.",
+    path: ["passwordConfirm"],
+  });
+
+// 이름 수정 유효성 검사 스키마
+export const nameUpdateSchema = z.object({
+  name: nameField,
+});
+
+// 비밀번호 수정 유효성 검사 스키마
+export const passwordUpdateSchema = z
+  .object({
+    currentPassword: z.string().min(1, "현재 비밀번호를 입력해주세요."),
+    newPassword: passwordField,
+    confirmPassword: z.string().min(1, "비밀번호 확인을 입력해주세요."),
+  })
+  .refine((data) => data.currentPassword !== data.newPassword, {
+    message: "현재 비밀번호와 다른 신규 비밀번호를 입력해주세요.",
+    path: ["newPassword"],
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "신규 비밀번호가 일치하지 않습니다.",
+    path: ["confirmPassword"],
+  });
+
+// 문의하기 유효성 검사 스키마
+export const contactSchema = z.object({
+  name: contactNameField,
+  email: emailField,
+  company: z
+    .string()
+    .max(20, "회사명은 20자 이내로 입력해주세요.")
+    .refine((val) => val.length === 0 || val.length >= 2, {
+      message: "회사명은 2글자 이상 입력해주세요.",
+    })
+    .optional()
+    .or(z.literal("")),
+  content: z.string().min(1, "문의 내용을 입력해주세요."),
+});
+```
+
+
 ### 2. 공통 컴포넌트 설계
 * **`Input`**: Zod 에러 메시지를 Props로 전달받아 실시간 피드백을 제공하며, Password Toggle 기능을 내장하여 모든 인증 폼에서 일관된 입력 경험 제공
 * **`Button`**: 다양한 스타일(Variants)과 로딩 상태(isSubmitting)를 통합 관리하여 인터랙션 일관성 제공
